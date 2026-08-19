@@ -23,8 +23,8 @@ jobs:
 
       - name: Initialize Database and Start Live Containerized App Server
         run: |
-          docker run -d -p 5000:5000 --name web-store-engine ecommerce-core-app /bin/bash -c "python init_db.py && python server.py"
-          sleep 5
+              docker run -d -p 5000:5000 -e DATABASE_PATH="ecommerce.db" --name web-store-engine ecommerce-core-app /bin/bash -c "python init_db.py && python server.py"
+              sleep 5
 
       - name: Execute Automated Regression Test Suites against Sandbox Container
         run: |
