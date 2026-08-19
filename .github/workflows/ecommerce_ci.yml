@@ -19,7 +19,7 @@ jobs:
               # Professional case-insensitive lookup tool
               TARGET_DIR=$(ls -d [eE]*[cC]* | head -n 1)
               echo "DevOps Target Folder Located: $TARGET_DIR"
-              docker build -f "$TARGET_DIR/Dockerfile.app" -t ecommerce-core-app .
+              docker build -f "$TARGET_DIR/Dockerfile.app" -t ecommerce-core-app "$TARGET_DIR"
 
       - name: Initialize Database and Start Live Containerized App Server
         run: |
