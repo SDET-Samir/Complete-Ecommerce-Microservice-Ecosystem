@@ -16,7 +16,10 @@ jobs:
           
       - name: Build and Package Core Application Service Snapshot Image
         run: |
-              docker build -f ecommerce-api-testing/Dockerfile.app -t ecommerce-core-app .
+              # Professional case-insensitive lookup tool
+              TARGET_DIR=$(ls -d [eE]*[cC]* | head -n 1)
+              echo "DevOps Target Folder Located: $TARGET_DIR"
+              docker build -f "$TARGET_DIR/Dockerfile.app" -t ecommerce-core-app .
 
       - name: Initialize Database and Start Live Containerized App Server
         run: |
@@ -26,8 +29,10 @@ jobs:
       - name: Execute Automated Regression Test Suites against Sandbox Container
         run: |
           pip install requests pytest pytest-html
-          cd tests
-          python -m pytest test_auth.py test_database.py test_products.py -v --html=../report.html --self-contained-html
+          # Dynamic directory navigation portal
+          TARGET_DIR=$(ls -d [eE]*[cC]* | head -n 1)
+          cd "$TARGET_DIR/tests"
+          python -m pytest test_auth.py test_database.py test_products.py -v --html=../../report.html --self-contained-html
 
       - name: Trigger Remote Frontend Web UI Playwright Pipeline
         if: success()
