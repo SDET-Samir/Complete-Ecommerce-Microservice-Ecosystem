@@ -80,4 +80,4 @@ python -m pytest test_auth.py test_database.py test_products.py -v --html=../rep
 ---
 
 ## Sample Telemetry Report
-Upon successful framework execution, open the generated `report.html` to review granular step timelines, database layer checks, request performance speeds, and validation results..
+Upon successful framework execution, open the generated `report.html` to review granular step timelines, database layer checks, request performance speeds, and validation results.
