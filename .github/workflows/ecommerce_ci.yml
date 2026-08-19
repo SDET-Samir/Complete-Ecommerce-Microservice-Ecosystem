@@ -1,0 +1,41 @@
+name: E-Commerce Multi-Container CI/CD Core Pipeline
+
+on: [push]
+
+jobs:
+  run_my_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository Source
+        uses: actions/checkout@v4
+      
+      - name: Configure Core Python Environment Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Build and Package Core Application Service Snapshot Image
+        run: |
+          docker build -f Dockerfile.app -t ecommerce-core-app .
+
+      - name: Initialize Database and Start Live Containerized App Server
+        run: |
+          docker run -d -p 5000:5000 --name web-store-engine ecommerce-core-app /bin/bash -c "python init_db.py && python server.py"
+          sleep 5
+
+      - name: Execute Automated Regression Test Suites against Sandbox Container
+        run: |
+          pip install requests pytest pytest-html
+          cd tests
+          python -m pytest test_auth.py test_database.py test_products.py -v --html=../report.html --self-contained-html
+
+      - name: Trigger Remote Frontend Web UI Playwright Pipeline
+        if: success()
+        env:
+          TRIGGER_TOKEN: ${{ secrets.AUTOMATION_TRIGGER_TOKEN }}
+        run: |
+          curl -X POST \
+               -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer $TRIGGER_TOKEN" \
+               -d '{"event_type": "ecommerce_deployed"}' \
+               https://api.github.com/repos/APITestEngineer-Samir/Web-UI-Automation-Python/dispatches
