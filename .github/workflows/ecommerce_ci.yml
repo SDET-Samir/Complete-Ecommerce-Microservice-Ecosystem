@@ -16,7 +16,7 @@ jobs:
           
       - name: Build and Package Core Application Service Snapshot Image
         run: |
-          docker build -f Dockerfile.app -t ecommerce-core-app .
+              docker build -f ecommerce-api-testing/Dockerfile.app -t ecommerce-core-app .
 
       - name: Initialize Database and Start Live Containerized App Server
         run: |
